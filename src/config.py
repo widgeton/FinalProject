@@ -7,13 +7,20 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
     DB_NAME: str
-    REDIS_URL: str
+
+    SMTP_USER: str
+    SMTP_PASS: str
+    SMTP_HOST: str
+    SMTP_PORT: str
+
+    JWT_SECRET_KEY: str
+    JWT_ALGORITHM: str
 
     MODE: str
 
     @property
     def DB_URL(self):
-        return f"postgresql+asyncpg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
+        return f"postgresql+psycopg://{self.DB_USER}:{self.DB_PASS}@{self.DB_HOST}:{self.DB_PORT}/{self.DB_NAME}"
 
     model_config = SettingsConfigDict(env_file='.env')
 
