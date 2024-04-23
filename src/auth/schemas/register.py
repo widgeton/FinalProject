@@ -2,19 +2,19 @@ from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
 
+from .types import Email, Pass
+
 
 class CompanyRegister(BaseModel):
-    email: str = Field(pattern=r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b',
-                       examples=["user@gmail.com"])
+    email: Email
     token: str = Field(examples=["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9."
                                  "eyJzdWIiOiJ1c2VyQGdtYWlsLmNvbSIsImV4cCI6MTcxMzg3NDAyNX0."
                                  "cCS-lLzP8kJGTifgFmAX76myjcHA7euj6i_QjdPu8Aw"])
 
 
 class CompleteCompanyRegister(BaseModel):
-    email: str = Field(pattern=r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,7}\b',
-                       examples=["user@gmail.com"])
-    password: str = Field(min_length=6, examples=["NjuyT56Yu/U%g"])
+    email: Email
+    password: Pass
     first_name: str = Field(examples=["John"])
     last_name: str = Field(examples=["Doe"])
     company_name: str = Field(examples=["Google"])
