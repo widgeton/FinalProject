@@ -9,7 +9,7 @@ from . import dependencies as dep
 from .services import jwt
 from .schemas.register import CompleteCompanyRegister, CompanyRegister
 from .schemas.token import Token
-from .oauth2 import AuthBody
+from .oauth2 import OAuth2Body
 
 ACCESS_TOKEN_EXPIRE_DAYS = 30
 
@@ -40,7 +40,7 @@ async def complete_register_company(body: CompleteCompanyRegister):
 
 
 @router.post("/login")
-async def login(response: Response, body: AuthBody):
+async def login(response: Response, body: OAuth2Body):
     user = srv.authenticate_user(body.email, body.password)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
