@@ -23,13 +23,4 @@ class User(Base):
     role: Mapped[Roles]
     company_id: Mapped[str] = mapped_column(ForeignKey("company.id"))
 
-    company: Mapped["Company"] = relationship(back_populates="users")
-
-
-# class Company(Base):
-#     __tablename__ = "company"
-#
-#     id: Mapped[pk]
-#     name: Mapped[str]
-#
-#     users: Mapped[list["User"]] = relationship(back_populates="company")
+    company: Mapped["Company"] = relationship(back_populates="users", lazy="joined")

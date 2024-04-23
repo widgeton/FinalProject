@@ -8,7 +8,7 @@ from auth.schemas.token import TokenData
 from auth.exceptions import TokenDataException
 
 
-def get_jwt_token(data: dict, expires_delta: timedelta | None = None):
+def generate_token(data: dict, expires_delta: timedelta | None = None):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     if expires_delta:
@@ -18,7 +18,7 @@ def get_jwt_token(data: dict, expires_delta: timedelta | None = None):
     return encoded_jwt
 
 
-def get_jwt_token_data(token: str) -> TokenData:
+def decode_token(token: str) -> TokenData:
     try:
         payload = jwt.decode(token, settings.JWT_SECRET_KEY, algorithms=[settings.JWT_ALGORITHM])
         email = payload.get("sub")
