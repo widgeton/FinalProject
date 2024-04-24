@@ -1,10 +1,9 @@
-from . import company as c
-from . import user as u
+from schemas import CompanyInDB, UserInDB
 
 
-class UserRelInDB(u.UserInDB):
-    company: c.CompanyInDB
+class UserRelInDB(UserInDB):
+    company: CompanyInDB
 
 
-class CompanyRelInDB(c.CompanyInDB):
-    users: list[u.UserInDB]
+class CompanyRelInDB(CompanyInDB):
+    users: list[UserInDB]

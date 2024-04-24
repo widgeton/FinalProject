@@ -21,6 +21,6 @@ class User(Base):
     first_name: Mapped[str]
     last_name: Mapped[str]
     role: Mapped[Roles]
-    company_id: Mapped[str] = mapped_column(ForeignKey("company.id"))
+    company_id: Mapped[int] = mapped_column(ForeignKey("company.id"))
 
     company: Mapped["Company"] = relationship(back_populates="users", lazy="joined")

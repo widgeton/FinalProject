@@ -6,7 +6,7 @@ from repositories.company import CompanyRepository
 
 class UnitOfWork(BaseUnitOfWork):
 
-    def __init__(self, session_factory=session_factory):
+    def __init__(self):
         self.session_factory = session_factory
 
     def __enter__(self):

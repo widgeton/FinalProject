@@ -10,6 +10,10 @@ class BaseRepository(abc.ABC):
     def get(self, reference):
         raise NotImplementedError
 
+    @abc.abstractmethod
+    def update(self, id, **fields):
+        raise NotImplementedError
+
 
 class BaseUnitOfWork(abc.ABC):
     users: BaseRepository

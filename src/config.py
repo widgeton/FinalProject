@@ -14,7 +14,6 @@ class Settings(BaseSettings):
     SMTP_PORT: str
 
     JWT_SECRET_KEY: str
-    JWT_ALGORITHM: str
 
     MODE: str
 

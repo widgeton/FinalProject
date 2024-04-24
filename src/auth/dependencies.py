@@ -3,7 +3,8 @@ from typing import Annotated
 from fastapi import HTTPException, Depends, Security, status
 from fastapi.security import SecurityScopes
 
-from schemas.user import User, Roles
+from config import settings
+from .schemas import User, Roles
 from .oauth2 import OAuth2PasswordBearerWithCookie
 from .services import jwt
 from . import exceptions as exc
@@ -16,10 +17,24 @@ def check_string_on_email(email: str):
     return email
 
 
-def check_email_in_db(email: Annotated[str, Depends(check_string_on_email)]):
-    if srv.is_email_in_db(email):
-        raise HTTPException(status_code=400, detail="Email already exists in system")
-    return email
+class EmailInDBChecker:
+    def __init__(self, versa: bool = False):
+        self.versa = versa
+
+    def __call__(self, email: Annotated[str, Depends(check_string_on_email)]):
+        if not self.versa and srv.is_email_in_db(email):
+            raise HTTPException(status_code=400, detail="Email already exists in system")
+        if self.versa and not srv.is_email_in_db(email):
+            raise HTTPException(status_code=400, detail="Email does not exists in system")
+        return email
+
+
+def validate_token(token: str):
+    try:
+        token = jwt.decode_token(token, settings.JWT_SECRET_KEY)
+        return token
+    except exc.TokenDataException:
+        raise HTTPException(status_code=400, detail="Could not validate token")
 
 
 oauth2_scheme = OAuth2PasswordBearerWithCookie(
@@ -45,7 +60,7 @@ def get_current_user(
         headers={"WWW-Authenticate": authenticate_value},
     )
     try:
-        token_data = jwt.decode_token(token)
+        token_data = jwt.decode_token(token, settings.JWT_SECRET_KEY)
     except exc.TokenDataException:
         raise credentials_exception
 
