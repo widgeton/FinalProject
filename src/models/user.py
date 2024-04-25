@@ -21,8 +21,6 @@ class UserModel(BaseModel):
 
     async def to_pydantic_schema(self) -> UserWithCompany:
         company = await self.awaitable_attrs.company
-        return UserWithCompany(id=self.id, email=self.email,
-                               first_name=self.first_name,
-                               last_name=self.last_name,
-                               role=self.role,
-                               company=company.to_pydantic_schema())
+        attrs = self.__dict__.copy()
+        del attrs['company']
+        return UserWithCompany(**attrs, company=company.to_pydantic_schema())
