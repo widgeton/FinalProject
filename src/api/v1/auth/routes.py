@@ -34,13 +34,14 @@ async def complete_register_company(body: sch.CompanyRegister,
     admin = sch.UserCreate(role=sch.Roles.admin,
                            email=token_data.email,
                            **body.model_dump(exclude={"company_name"}))
-    return srv.save_company_and_its_admin(company, admin, uow)
+    new_admin_with_company = await srv.save_company_and_its_admin(company, admin, uow)
+    return new_admin_with_company
 
 
 @router.post("/login")
 async def login(response: Response, body: sch.OAuth2Body,
                 uow: Annotated[UnitOfWork, Depends()]):
-    user = srv.authenticate_user(body.email, body.password, uow)
+    user = await srv.authenticate_user(body.email, body.password, uow)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")
     access_token = generate_token(
@@ -75,7 +76,8 @@ async def register_user(body: sch.UserRegister,
     user = sch.UserCreate(role=sch.Roles.worker,
                           **token_data.model_dump(exclude={"scopes"}),
                           **body.model_dump())
-    return srv.save_new_user(user, uow)
+    new_user = await srv.save_new_user(user, uow)
+    return new_user
 
 
 @router.put("/update-user")
@@ -83,7 +85,8 @@ async def update_user(email: Annotated[str, Depends(dep.EmailInDBChecker(versa=T
                       data: sch.UserUpdate,
                       admin: Annotated[sch.UserInDB, Depends(dep.get_current_admin)],
                       uow: Annotated[UnitOfWork, Depends()]):
-    user = srv.get_user(email, uow)
+    user = await srv.get_user(email, uow)
     if admin.company_id != user.company_id:
         raise HTTPException(status_code=400, detail="Could not update another company user.")
-    return srv.update_user(user.id, data, uow)
+    updated_user = await srv.update_user(user.id, data, uow)
+    return updated_user

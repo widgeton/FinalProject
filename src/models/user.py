@@ -19,9 +19,10 @@ class UserModel(BaseModel):
 
     company: Mapped["CompanyModel"] = relationship(back_populates="users", lazy="joined")
 
-    def to_pydantic_schema(self) -> UserWithCompany:
+    async def to_pydantic_schema(self) -> UserWithCompany:
+        company = await self.awaitable_attrs.company
         return UserWithCompany(id=self.id, email=self.email,
                                first_name=self.first_name,
                                last_name=self.last_name,
                                role=self.role,
-                               company=self.company.to_pydantic_schema())
+                               company=company.to_pydantic_schema())

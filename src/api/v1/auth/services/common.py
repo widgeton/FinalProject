@@ -16,9 +16,9 @@ def is_email(line: str):
     return re.match(email_pattern, line)
 
 
-def is_email_in_db(email: str, uow: AbstractUnitOfWork) -> bool:
-    with uow:
-        user = uow.users.get(reference={"email": email})
+async def is_email_in_db(email: str, uow: AbstractUnitOfWork) -> bool:
+    async with uow:
+        user = await uow.users.get(reference={"email": email})
         return user is not None
 
 
@@ -31,47 +31,47 @@ def send_token(email: str, data: dict, title: str = "Token",
     return token
 
 
-def save_company_and_its_admin(company: Company, admin: UserCreate,
-                               uow: AbstractUnitOfWork) -> UserWithCompany:
-    with uow:
-        company = uow.companies.add(**company.model_dump())
-        admin = uow.users.add(hashed_pass=get_password_hash(admin.password),
-                              company_id=company.id,
-                              **admin.model_dump(exclude={"password", "company_id"}))
-        user = admin.to_pydantic_schema()
-        uow.commit()
+async def save_company_and_its_admin(company: Company, admin: UserCreate,
+                                     uow: AbstractUnitOfWork) -> UserWithCompany:
+    async with uow:
+        company = await uow.companies.add(**company.model_dump())
+        admin = await uow.users.add(hashed_pass=get_password_hash(admin.password),
+                                    company_id=company.id,
+                                    **admin.model_dump(exclude={"password", "company_id"}))
+        user = await admin.to_pydantic_schema()
+        await uow.commit()
         return user
 
 
-def get_user(email: str, uow: AbstractUnitOfWork) -> UserInDB | None:
-    with uow:
-        user = uow.users.get({"email": email})
+async def get_user(email: str, uow: AbstractUnitOfWork) -> UserInDB | None:
+    async with uow:
+        user = await uow.users.get({"email": email})
         if user:
             return UserInDB.model_validate(user, from_attributes=True)
 
 
-def authenticate_user(email: str, password: str,
-                      uow: AbstractUnitOfWork) -> UserInDB | None:
-    user = get_user(email, uow)
+async def authenticate_user(email: str, password: str,
+                            uow: AbstractUnitOfWork) -> UserInDB | None:
+    user = await get_user(email, uow)
     if verify_password(password, user.hashed_pass):
         return user
 
 
-def save_new_user(new_user: sch.UserCreate,
-                  uow: AbstractUnitOfWork) -> UserWithCompany:
-    with uow:
-        new_user = uow.users.add(hashed_pass=get_password_hash(new_user.password),
-                                 **new_user.model_dump(exclude={"password"}))
-        user = new_user.to_pydantic_schema()
-        uow.commit()
+async def save_new_user(new_user: sch.UserCreate,
+                        uow: AbstractUnitOfWork) -> UserWithCompany:
+    async with uow:
+        new_user = await uow.users.add(hashed_pass=get_password_hash(new_user.password),
+                                       **new_user.model_dump(exclude={"password"}))
+        user = await new_user.to_pydantic_schema()
+        await uow.commit()
         return user
 
 
-def update_user(user_id: int,
-                new_user: sch.UserUpdate,
-                uow: AbstractUnitOfWork) -> UserWithCompany:
-    with uow:
-        new_user = uow.users.update(user_id, **new_user.model_dump(exclude_unset=True))
-        user = new_user.to_pydantic_schema()
-        uow.commit()
+async def update_user(user_id: int,
+                      new_user: sch.UserUpdate,
+                      uow: AbstractUnitOfWork) -> UserWithCompany:
+    async with uow:
+        new_user = await uow.users.update(user_id, **new_user.model_dump(exclude_unset=True))
+        user = await new_user.to_pydantic_schema()
+        await uow.commit()
         return user

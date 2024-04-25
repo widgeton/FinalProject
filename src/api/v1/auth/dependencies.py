@@ -22,11 +22,12 @@ class EmailInDBChecker:
     def __init__(self, versa: bool = False):
         self.versa = versa
 
-    def __call__(self, email: Annotated[str, Depends(check_string_on_email)],
-                 uow: Annotated[UnitOfWork, Depends()]):
-        if not self.versa and is_email_in_db(email, uow):
+    async def __call__(self, email: Annotated[str, Depends(check_string_on_email)],
+                       uow: Annotated[UnitOfWork, Depends()]):
+        check = await is_email_in_db(email, uow)
+        if not self.versa and check:
             raise HTTPException(status_code=400, detail="Email already exists in system")
-        if self.versa and not is_email_in_db(email, uow):
+        if self.versa and not check:
             raise HTTPException(status_code=400, detail="Email does not exists in system")
         return email
 
@@ -49,9 +50,9 @@ oauth2_scheme = OAuth2PasswordBearerWithCookie(
 )
 
 
-def get_current_user(security_scopes: SecurityScopes,
-                     token: Annotated[str, Depends(oauth2_scheme)],
-                     uow: Annotated[UnitOfWork, Depends()]):
+async def get_current_user(security_scopes: SecurityScopes,
+                           token: Annotated[str, Depends(oauth2_scheme)],
+                           uow: Annotated[UnitOfWork, Depends()]):
     authenticate_value = "Bearer"
     if security_scopes.scopes:
         authenticate_value += f' scope="{security_scopes.scope_str}"'
@@ -66,7 +67,7 @@ def get_current_user(security_scopes: SecurityScopes,
     except TokenDataException:
         raise credentials_exception
 
-    user = get_user(token_data.email, uow)
+    user = await get_user(token_data.email, uow)
     if user is None:
         raise credentials_exception
     for scope in security_scopes.scopes:
@@ -76,7 +77,7 @@ def get_current_user(security_scopes: SecurityScopes,
     return user
 
 
-def get_current_admin(
+async def get_current_admin(
         current_user: Annotated[UserCreate, Security(get_current_user, scopes=["admin"])],
 ):
     if current_user.role != Roles.admin:

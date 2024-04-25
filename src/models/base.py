@@ -1,7 +1,8 @@
 from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.ext.asyncio import AsyncAttrs
 
 
-class BaseModel(DeclarativeBase):
+class BaseModel(AsyncAttrs, DeclarativeBase):
     __abstract__ = True
 
     repr_cols_num = 3
