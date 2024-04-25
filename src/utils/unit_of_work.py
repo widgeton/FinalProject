@@ -1,10 +1,27 @@
+from abc import ABC, abstractmethod
+
+from utils.repository import AbstractRepository
 from database.db import session_factory
-from .base import BaseUnitOfWork
-from repositories.user import UserRepository
-from repositories.company import CompanyRepository
+from repositories import UserRepository, CompanyRepository
 
 
-class UnitOfWork(BaseUnitOfWork):
+class AbstractUnitOfWork(ABC):
+    users: AbstractRepository
+    companies: AbstractRepository
+
+    def __exit__(self, *args):
+        self.rollback()
+
+    @abstractmethod
+    def commit(self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def rollback(self):
+        raise NotImplementedError
+
+
+class UnitOfWork(AbstractUnitOfWork):
 
     def __init__(self):
         self.session_factory = session_factory

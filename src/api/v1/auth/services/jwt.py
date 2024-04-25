@@ -3,8 +3,8 @@ from datetime import timedelta, datetime, timezone
 from jose import jwt, JWTError
 from pydantic import ValidationError
 
-from auth.schemas.token import TokenData
-from auth.exceptions import TokenDataException
+from api.v1.auth.schemas.token import TokenData
+from api.v1.auth.exceptions import TokenDataException
 
 ALGORITHM = "HS256"
 

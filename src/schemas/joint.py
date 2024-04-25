@@ -1,9 +1,6 @@
-from schemas import CompanyInDB, UserInDB
+from schemas import CompanyInDB, User
 
 
-class UserRelInDB(UserInDB):
+class UserWithCompany(User):
+    id: int
     company: CompanyInDB
-
-
-class CompanyRelInDB(CompanyInDB):
-    users: list[UserInDB]

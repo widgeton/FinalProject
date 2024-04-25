@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 
-from .types import Email, Pass
+from schemas.field_types import Email, Pass
 
 
 class OAuth2Body(BaseModel):

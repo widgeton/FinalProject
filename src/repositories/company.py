@@ -1,26 +1,6 @@
-from sqlalchemy.orm import Session
-from sqlalchemy import select, update
-
-from .base import BaseRepository
-from database.models.company import Company
+from utils.repository import SQLAlchemyRepository
+from models import CompanyModel
 
 
-class CompanyRepository(BaseRepository):
-    def __init__(self, session: Session):
-        self.session = session
-
-    def add(self, item: Company):
-        self.session.add(item)
-
-    def get(self, reference) -> Company | None:
-        query = select(Company).filter_by(id=reference)
-        result = self.session.execute(query)
-        return result.scalar_one_or_none()
-
-    def update(self, id, **fields):
-        stmt = (
-            update(Company)
-            .filter_by(id=id)
-            .values(**fields)
-        )
-        self.session.execute(stmt)
+class CompanyRepository(SQLAlchemyRepository):
+    model = CompanyModel

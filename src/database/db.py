@@ -1,14 +1,19 @@
-from sqlalchemy.orm import DeclarativeBase, mapped_column, sessionmaker
+from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
-from typing import Annotated
 
 from config import settings
 
-engine = create_engine(url=settings.DB_URL)
-session_factory = sessionmaker(bind=engine, autoflush=False)
+engine = create_engine(
+    url=settings.DB_URL,
+    echo=False,
+    future=True,
+    pool_size=50,
+    max_overflow=100
+)
 
-pk = Annotated[int, mapped_column(primary_key=True, nullable=False, unique=True, autoincrement=True)]
-
-
-class Base(DeclarativeBase):
-    pass
+session_factory = sessionmaker(
+    bind=engine,
+    autoflush=False,
+    autocommit=False,
+    expire_on_commit=False
+)

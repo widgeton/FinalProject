@@ -1,16 +1,16 @@
-import smtplib
+from smtplib import SMTP_SSL, SMTPException
 from email.message import EmailMessage
 from config import settings
 
-from auth.exceptions import SendEmailMessageException
+from api.v1.auth.exceptions import SendEmailMessageException
 
 
 def send_email(email_message: EmailMessage) -> None:
     try:
-        with smtplib.SMTP_SSL(host=settings.SMTP_HOST, port=settings.SMTP_PORT) as server:
+        with SMTP_SSL(host=settings.SMTP_HOST, port=settings.SMTP_PORT) as server:
             server.login(settings.SMTP_USER, settings.SMTP_PASS)
             server.send_message(email_message)
-    except smtplib.SMTPException:
+    except SMTPException:
         raise SendEmailMessageException
 
 

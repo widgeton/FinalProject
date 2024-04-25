@@ -1,6 +1,14 @@
-__all__ = ("Company", "CompanyInDB", "User", "UserUpdate",
-           "UserInDB", "UserRelInDB", "CompanyRelInDB", "Roles")
+__all__ = (
+    "Company",
+    "CompanyInDB",
+    "UserCreate",
+    "UserUpdate",
+    "UserInDB",
+    "User",
+    "UserWithCompany",
+    "Roles",
+)
 
 from .company import Company, CompanyInDB
-from .user import User, UserUpdate, UserInDB, Roles
-from .joint import UserRelInDB, CompanyRelInDB
+from .user import UserCreate, UserUpdate, UserInDB, Roles, User
+from .joint import UserWithCompany
