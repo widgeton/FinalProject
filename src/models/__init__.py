@@ -4,6 +4,6 @@ __all__ = (
     "UserModel",
 )
 
-from models.base import BaseModel
-from models.company import CompanyModel
-from models.user import UserModel
+from .base import BaseModel
+from .company import CompanyModel
+from .user import UserModel
