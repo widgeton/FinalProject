@@ -9,7 +9,7 @@ from schemas import UserCreate, Roles
 from api.v1.auth.oauth2 import OAuth2PasswordBearerWithCookie
 from api.v1.auth.services.jwt import decode_token
 from api.v1.auth.exceptions import TokenDataException
-from api.v1.auth.services.common import is_email, is_email_in_db, get_user
+from api.v1.auth.services.common import is_email, get_user
 
 
 def check_string_on_email(email: str):
@@ -24,10 +24,10 @@ class EmailInDBChecker:
 
     async def __call__(self, email: Annotated[str, Depends(check_string_on_email)],
                        uow: Annotated[UnitOfWork, Depends()]):
-        check = await is_email_in_db(email, uow)
-        if not self.versa and check:
+        user = await get_user(email, uow)
+        if not self.versa and user:
             raise HTTPException(status_code=400, detail="Email already exists in system")
-        if self.versa and not check:
+        if self.versa and not user:
             raise HTTPException(status_code=400, detail="Email does not exists in system")
         return email
 

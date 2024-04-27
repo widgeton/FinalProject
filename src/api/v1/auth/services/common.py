@@ -16,12 +16,6 @@ def is_email(line: str):
     return re.match(email_pattern, line)
 
 
-async def is_email_in_db(email: str, uow: AbstractUnitOfWork) -> bool:
-    async with uow:
-        user = await uow.users.get(reference={"email": email})
-        return user is not None
-
-
 def send_token(email: str, data: dict, title: str = "Token",
                expire: timedelta = timedelta(days=1)) -> str:
     token = generate_token(data, settings.JWT_SECRET_KEY, expire)
