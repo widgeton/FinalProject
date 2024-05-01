@@ -12,7 +12,7 @@ class User(BaseModel):
 
 
 class UserCreate(User):
-    password: Pass | None = None
+    password: Pass
     company_id: int | None = None
 
 

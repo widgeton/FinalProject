@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, update, insert
+from sqlalchemy import select, update, insert, delete
 
 
 class AbstractRepository(ABC):
@@ -43,3 +43,15 @@ class SQLAlchemyRepository(AbstractRepository):
         )
         res = await self.session.execute(stmt)
         return res.scalar_one()
+
+
+class AbstractDelRepository(AbstractRepository):
+    @abstractmethod
+    async def delete(self, *args, **kwargs):
+        raise NotImplementedError
+
+
+class SQLAlchemyDelRepository(SQLAlchemyRepository, AbstractDelRepository):
+    async def delete(self, id_: int):
+        stmt = delete(self.model).filter_by(id=id_)
+        await self.session.execute(stmt)

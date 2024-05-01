@@ -8,6 +8,7 @@ from api.v1.auth.exceptions import SendEmailMessageException
 import api.v1.auth.dependencies as dep
 from api.v1.auth.services.jwt import generate_token
 import api.v1.auth.schemas as sch
+from models.field_types import Roles
 from utils.unit_of_work import UnitOfWork
 from config import settings
 
@@ -31,7 +32,7 @@ async def complete_register_company(body: sch.CompanyRegister,
                                     token_data: Annotated[sch.TokenData, Depends(dep.validate_token)],
                                     uow: Annotated[UnitOfWork, Depends()]):
     company = sch.Company(name=body.company_name)
-    admin = sch.UserCreate(role=sch.Roles.admin,
+    admin = sch.UserCreate(role=Roles.admin,
                            email=token_data.email,
                            **body.model_dump(exclude={"company_name"}))
     new_admin_with_company = await srv.save_company_and_its_admin(company, admin, uow)
@@ -73,7 +74,7 @@ async def invite_worker(email: Annotated[str, Depends(dep.EmailInDBChecker())],
 async def register_user(body: sch.UserRegister,
                         token_data: Annotated[sch.TokenData, Depends(dep.validate_token)],
                         uow: Annotated[UnitOfWork, Depends()]):
-    user = sch.UserCreate(role=sch.Roles.worker,
+    user = sch.UserCreate(role=Roles.worker,
                           **token_data.model_dump(exclude={"scopes"}),
                           **body.model_dump())
     new_user = await srv.save_new_user(user, uow)

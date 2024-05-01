@@ -1,13 +1,14 @@
 from abc import ABC, abstractmethod
 
-from utils.repository import AbstractRepository
+from utils.repository import AbstractRepository, AbstractDelRepository
 from database.db import async_session_factory
-from repositories import UserRepository, CompanyRepository
+from repositories import UserRepository, CompanyRepository, DepartmentRepository
 
 
 class AbstractUnitOfWork(ABC):
     users: AbstractRepository
     companies: AbstractRepository
+    departments: AbstractDelRepository
 
     @abstractmethod
     async def __aexit__(self, *args):
@@ -35,6 +36,7 @@ class UnitOfWork(AbstractUnitOfWork):
         self.session = self.session_factory()
         self.users = UserRepository(self.session)
         self.companies = CompanyRepository(self.session)
+        self.departments = DepartmentRepository(self.session)
         return self
 
     async def __aexit__(self, *args):

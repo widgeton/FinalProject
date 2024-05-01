@@ -1,4 +1,4 @@
-from schemas import Roles
+from models.field_types import Roles
 
 COMPANIES = {
     "Google": {

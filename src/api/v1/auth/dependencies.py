@@ -5,7 +5,8 @@ from fastapi.security import SecurityScopes
 
 from config import settings
 from utils.unit_of_work import UnitOfWork
-from schemas import UserCreate, Roles
+from schemas import UserInDB
+from models.field_types import Roles
 from api.v1.auth.oauth2 import OAuth2PasswordBearerWithCookie
 from api.v1.auth.services.jwt import decode_token
 from api.v1.auth.exceptions import TokenDataException
@@ -78,7 +79,7 @@ async def get_current_user(security_scopes: SecurityScopes,
 
 
 async def get_current_admin(
-        current_user: Annotated[UserCreate, Security(get_current_user, scopes=["admin"])],
+        current_user: Annotated[UserInDB, Security(get_current_user, scopes=["admin"])],
 ):
     if current_user.role != Roles.admin:
         raise HTTPException(status_code=400, detail="Inactive user")

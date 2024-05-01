@@ -6,9 +6,18 @@ __all__ = (
     "UserInDB",
     "User",
     "UserWithCompany",
-    "Roles",
+    "Department",
+    "DepartmentUpdate",
+    "DepartmentCreate",
+    "DepartmentInDB",
 )
 
 from .company import Company, CompanyInDB
-from .user import UserCreate, UserUpdate, UserInDB, Roles, User
+from .user import UserCreate, UserUpdate, UserInDB, User
+from .department import (
+    Department,
+    DepartmentInDB,
+    DepartmentCreate,
+    DepartmentUpdate,
+)
 from .joint import UserWithCompany

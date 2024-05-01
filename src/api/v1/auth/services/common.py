@@ -47,7 +47,7 @@ async def get_user(email: str, uow: AbstractUnitOfWork) -> UserInDB | None:
 async def authenticate_user(email: str, password: str,
                             uow: AbstractUnitOfWork) -> UserInDB | None:
     user = await get_user(email, uow)
-    if verify_password(password, user.hashed_pass):
+    if user and verify_password(password, user.hashed_pass):
         return user
 
 

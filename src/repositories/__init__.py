@@ -1,7 +1,9 @@
 __all__ = (
     "UserRepository",
     "CompanyRepository",
+    "DepartmentRepository",
 )
 
-from repositories.user import UserRepository
-from repositories.company import CompanyRepository
+from .user import UserRepository
+from .company import CompanyRepository
+from .department import DepartmentRepository
