@@ -12,7 +12,7 @@ sync_engine = create_engine(
 )
 
 with sync_engine.begin() as conn:
-    conn.execute(text("CREATE EXTENSION IF NOT EXISTS ltree;"))
+    conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm;"))
 
 async_engine = create_async_engine(
     url=settings.DB_URL,
