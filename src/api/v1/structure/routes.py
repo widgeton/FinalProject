@@ -43,6 +43,8 @@ async def update_department(id: int,
         path = str(id)
     elif "parent_id" in data:
         parent = await get_department(data.pop("parent_id"), admin, uow)
+        if parent.path.startswith(f"{old_dep.path}."):
+            raise HTTPException(400, "There cannot be cyclical paths.")
         path = f"{parent.path}.{id}"
     new_dep = old_dep.model_copy(update={"path": path, **data})
 
