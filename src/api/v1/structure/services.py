@@ -3,23 +3,21 @@ from utils.unit_of_work import AbstractUnitOfWork
 from api.v1.structure.exceptions import HandleDepartmentException
 
 
-async def create_new_department(name: str,
-                                parent_path: str,
-                                company_id: int,
+async def create_new_department(new_dep: DepartmentInDB,
                                 uow: AbstractUnitOfWork) -> DepartmentInDB:
     try:
         async with uow:
-            new_dep = await uow.departments.add(name=name, path="0", company_id=company_id)
-            new_dep.path = str(new_dep.id) if parent_path == "0" else f"{parent_path}.{new_dep.id}"
+            dep = await uow.departments.add(**new_dep.model_dump(exclude={"id"}))
+            dep.path = str(dep.id) if new_dep.path == "0" else f"{new_dep.path}.{dep.id}"
             await uow.commit()
-            return new_dep.to_pydantic_schema()
+            return dep.to_pydantic_schema()
     except Exception:
         raise HandleDepartmentException
 
 
-async def update_department(uow: AbstractUnitOfWork,
-                            old_dep: DepartmentInDB,
-                            new_dep: DepartmentInDB) -> DepartmentInDB:
+async def update_department(old_dep: DepartmentInDB,
+                            new_dep: DepartmentInDB,
+                            uow: AbstractUnitOfWork) -> DepartmentInDB:
     if old_dep == new_dep:
         return old_dep
 

@@ -6,9 +6,9 @@ class Department(BaseModel):
 
 
 class DepartmentInDB(Department):
-    id: int
+    id: int | None = None
     company_id: int
-    path: str = Field(pattern=r"^[1-9]\d{0,8}(\.[1-9]\d{0,8})*$")
+    path: str = Field(pattern=r"^(?:0|([1-9]\d{0,8}(\.[1-9]\d{0,8})*))$")
 
 
 class DepartmentCreate(Department):

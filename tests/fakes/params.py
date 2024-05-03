@@ -3,7 +3,14 @@ from contextlib import nullcontext
 from sqlalchemy.exc import CompileError, NoResultFound, IntegrityError
 import pytest
 
-from fakes.data import COMPANIES, USERS, NO_ID_USER
+from schemas import DepartmentInDB
+from fakes.data import (
+    COMPANIES,
+    USERS,
+    NO_ID_USER,
+    DEPARTMENTS,
+    CHANGED_DEPARTMENTS,
+)
 
 ADD_COMPANY_PARAMS = [
     (COMPANIES["Google"], nullcontext()),
@@ -43,4 +50,31 @@ UPDATE_USER_PARAMS = [
     (USERS["John"], COMPANIES["Google"], USERS["John"]["id"], {"first_name": "Johnny"}, nullcontext()),
     (USERS["John"], COMPANIES["Google"], 10, {"first_name": "Johnny"}, pytest.raises(NoResultFound)),
     (USERS["John"], COMPANIES["Google"], USERS["John"]["id"], {"...": "gibberish"}, pytest.raises(CompileError)),
+]
+
+UPDATE_DEPARTMENT_PARAMS = [
+    (
+        COMPANIES["Google"],
+        DEPARTMENTS.values(),
+        {
+            "id_": DEPARTMENTS["Test"]["id"],
+            "path": f"{DEPARTMENTS['Development']['path']}.{DEPARTMENTS['Development']['id']}",
+            "old_path": DEPARTMENTS["Test"]["path"]
+        },
+        [DepartmentInDB.model_validate(i, from_attributes=True) for i in CHANGED_DEPARTMENTS.values()]
+    ),
+    (
+        COMPANIES["Google"],
+        [DEPARTMENTS["Legal"]],
+        {
+            "id_": DEPARTMENTS["Legal"]["id"],
+            "name": "Illegal"
+        },
+        [DepartmentInDB(
+            id=DEPARTMENTS["Legal"]["id"],
+            name="Illegal",
+            company_id=DEPARTMENTS["Legal"]["company_id"],
+            path=DEPARTMENTS["Legal"]["path"]
+        )]
+    )
 ]
