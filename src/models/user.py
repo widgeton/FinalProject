@@ -18,6 +18,7 @@ class UserModel(BaseModel):
     company_id: Mapped[int] = mapped_column(ForeignKey("company.id"))
 
     company: Mapped["CompanyModel"] = relationship(back_populates="users", lazy="joined")
+    position: Mapped["PositionModel"] = relationship(secondary="user_position", back_populates="users")
 
     async def to_pydantic_schema(self) -> UserWithCompany:
         company = await self.awaitable_attrs.company

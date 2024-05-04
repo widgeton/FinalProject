@@ -2,5 +2,9 @@ class StructureException(Exception):
     pass
 
 
-class HandleDepartmentException(Exception):
+class HandleDepartmentException(StructureException):
+    pass
+
+
+class HandlePositionException(StructureException):
     pass

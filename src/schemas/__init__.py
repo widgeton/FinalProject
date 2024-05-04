@@ -10,6 +10,10 @@ __all__ = (
     "DepartmentUpdate",
     "DepartmentCreate",
     "DepartmentInDB",
+    "Position",
+    "PositionInDB",
+    "PositionUpdate",
+    "UserWithPosition",
 )
 
 from .company import Company, CompanyInDB
@@ -20,4 +24,5 @@ from .department import (
     DepartmentCreate,
     DepartmentUpdate,
 )
-from .joint import UserWithCompany
+from .position import Position, PositionInDB, PositionUpdate
+from .joint import UserWithCompany, UserWithPosition
