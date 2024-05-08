@@ -3,7 +3,7 @@ import pytest
 from repositories import DepartmentRepository
 from models import DepartmentModel, CompanyModel
 from schemas import DepartmentInDB
-from unit import funcs
+import funcs
 from fakes.params import UPDATE_DEPARTMENT_PARAMS
 from fakes.data import DEPARTMENTS
 

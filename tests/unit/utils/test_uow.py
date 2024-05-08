@@ -5,7 +5,7 @@ import pytest
 from models import CompanyModel
 from utils.unit_of_work import UnitOfWork
 from schemas import CompanyInDB
-from unit import funcs
+import funcs
 from fakes.data import COMPANIES
 
 pytestmark = pytest.mark.asyncio

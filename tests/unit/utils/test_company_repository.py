@@ -2,7 +2,7 @@ import pytest
 
 from repositories import CompanyRepository
 from models import CompanyModel
-from unit import funcs
+import funcs
 from fakes.params import ADD_COMPANY_PARAMS, GET_COMPANY_PARAMS, UPDATE_COMPANY_PARAMS
 
 pytestmark = pytest.mark.asyncio

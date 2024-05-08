@@ -2,7 +2,7 @@ import pytest
 
 from repositories import UserRepository
 from models import UserModel, CompanyModel
-from unit import funcs
+import funcs
 from fakes.params import (
     ADD_USER_PARAMS,
     ADD_UNIQUE_EMAIL_USER_PARAMS,

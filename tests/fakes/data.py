@@ -25,8 +25,17 @@ USERS = {
         "role": Roles.admin,
         "company_id": 1,
     },
-    "Jack": {
+    "Peter": {
         "id": 2,
+        "email": "peter@gmail.com",
+        "hashed_pass": "hashed_pass",
+        "first_name": "Peter",
+        "last_name": "Potter",
+        "role": Roles.worker,
+        "company_id": 1,
+    },
+    "Jack": {
+        "id": 3,
         "email": "jack@gmail.com",
         "hashed_pass": "hashed_pass",
         "first_name": "Jack",
@@ -35,7 +44,7 @@ USERS = {
         "company_id": 1,
     },
     "George": {
-        "id": 3,
+        "id": 4,
         "email": "george@gmail.com",
         "hashed_pass": "hashed_pass",
         "first_name": "George",
@@ -125,4 +134,48 @@ CHANGED_DEPARTMENTS = {
         "name": "E2E",
         "path": "1.3.6"
     },
+}
+
+TASKS = {
+    "Auth": {
+        "title": "Implement authentication",
+        "description": "Some description",
+        "author_id": USERS["John"]["id"],
+        "charged_id": USERS["John"]["id"],
+        "deadline": "2024-05-06 00:00",
+        "status": "wait",
+        "estimate": "48",
+    },
+    "Test": {
+        "title": "Test",
+        "description": "Some description",
+        "author_id": USERS["John"]["id"],
+        "charged_id": USERS["Peter"]["id"],
+        "deadline": "2024-05-06 00:00",
+        "status": "wait",
+        "estimate": "48",
+    }
+}
+
+EXPECTED_TASKS_DATA = {
+    "Auth": {
+        "title": "Implement authentication",
+        "description": "Some description",
+        "author_id": 1,
+        "charged_id": 1,
+        "deadline": "2024-05-06T00:00:00",
+        "status": "wait",
+        "estimate": "P2D",
+        "id": 1
+    },
+    "Test": {
+        "title": "Test",
+        "description": "Some description",
+        "author_id": 1,
+        "charged_id": 2,
+        "deadline": "2024-05-06T00:00:00",
+        "status": "wait",
+        "estimate": "P2D",
+        "id": 2
+    }
 }

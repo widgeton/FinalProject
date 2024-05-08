@@ -10,6 +10,8 @@ from fakes.data import (
     NO_ID_USER,
     DEPARTMENTS,
     CHANGED_DEPARTMENTS,
+    TASKS,
+    EXPECTED_TASKS_DATA
 )
 
 ADD_COMPANY_PARAMS = [
@@ -78,3 +80,27 @@ UPDATE_DEPARTMENT_PARAMS = [
         )]
     )
 ]
+
+_right_data = TASKS["Auth"]
+
+_auth = TASKS["Auth"].copy()
+_auth["charged_id"] = 78
+_nonexistent_id = _auth
+
+_auth = TASKS["Auth"].copy()
+_auth["charged_id"] = USERS["George"]["id"]
+_another_company_user_id = _auth
+
+CREATE_TASK_PARAMS = (
+    (_right_data, EXPECTED_TASKS_DATA["Auth"]),
+    (_nonexistent_id, {'detail': 'Wrong user reference.'}),
+    (_another_company_user_id, {'detail': 'User is not in admin company.'})
+)
+
+_expected = EXPECTED_TASKS_DATA["Test"].copy()
+_expected["title"] = "Testing"
+
+UPDATE_TASK_PARAMS = (
+    (_expected["id"], {"title": "Testing"}, _expected),
+    (4, {"title": "Testing"}, {"detail": "Wrong task reference."})
+)
