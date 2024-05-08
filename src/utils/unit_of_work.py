@@ -10,6 +10,7 @@ class AbstractUnitOfWork(ABC):
     companies: AbstractRepository
     departments: AbstractDelRepository
     positions: AbstractDelRepository
+    tasks: AbstractDelRepository
 
     @abstractmethod
     async def __aexit__(self, *args):
@@ -39,6 +40,7 @@ class UnitOfWork(AbstractUnitOfWork):
         self.companies = repo.CompanyRepository(self.session)
         self.departments = repo.DepartmentRepository(self.session)
         self.positions = repo.PositionRepository(self.session)
+        self.tasks = repo.TaskRepository(self.session)
         return self
 
     async def __aexit__(self, *args):

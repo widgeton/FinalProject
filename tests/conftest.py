@@ -1,5 +1,6 @@
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import (
     AsyncSession,
     create_async_engine,
@@ -39,6 +40,7 @@ async def setup_db(async_engine):
     assert settings.MODE == "TEST"
     async with async_engine.begin() as db_conn:
         await db_conn.run_sync(BaseModel.metadata.drop_all)
+        await db_conn.execute(text("CREATE EXTENSION IF NOT EXISTS pg_trgm;"))
         await db_conn.run_sync(BaseModel.metadata.create_all)
     yield
     async with async_engine.begin() as db_conn:

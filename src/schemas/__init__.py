@@ -14,6 +14,10 @@ __all__ = (
     "PositionInDB",
     "PositionUpdate",
     "UserWithPosition",
+    "Task",
+    "TaskInDB",
+    "TaskRel",
+    "TaskUpdate",
 )
 
 from .company import Company, CompanyInDB
@@ -25,4 +29,5 @@ from .department import (
     DepartmentUpdate,
 )
 from .position import Position, PositionInDB, PositionUpdate
-from .joint import UserWithCompany, UserWithPosition
+from .task import Task, TaskInDB, TaskUpdate
+from .joint import UserWithCompany, UserWithPosition, TaskRel

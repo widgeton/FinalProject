@@ -19,6 +19,12 @@ class UserModel(BaseModel):
 
     company: Mapped["CompanyModel"] = relationship(back_populates="users", lazy="joined")
     position: Mapped["PositionModel"] = relationship(secondary="user_position", back_populates="users")
+    authored_tasks: Mapped[list["TaskModel"]] = relationship(primaryjoin="UserModel.id == TaskModel.author_id",
+                                                             back_populates="author")
+    charged_tasks: Mapped[list["TaskModel"]] = relationship(primaryjoin="UserModel.id == TaskModel.charged_id",
+                                                            back_populates="charged")
+    observed_tasks: Mapped[list["TaskModel"]] = relationship(secondary="task_observer", back_populates="observers")
+    running_tasks: Mapped[list["TaskModel"]] = relationship(secondary="task_executor", back_populates="executors")
 
     async def to_pydantic_schema(self) -> UserWithCompany:
         company = await self.awaitable_attrs.company

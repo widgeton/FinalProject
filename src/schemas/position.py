@@ -11,5 +11,5 @@ class PositionInDB(Position):
 
 
 class PositionUpdate(Position):
-    name: str | None = Field(max_length=64, examples=["Head of department"], default=None)
+    name: str | None = None
     department_id: int | None = None

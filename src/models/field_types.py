@@ -4,6 +4,13 @@ from enum import Enum
 from sqlalchemy.orm import mapped_column
 
 
+class Statuses(Enum):
+    wait = "wait"
+    process = "process"
+    check = "check"
+    success = "success"
+
+
 class Roles(Enum):
     admin = "admin"
     chief = "chief"
