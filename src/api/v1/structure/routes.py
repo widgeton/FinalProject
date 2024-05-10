@@ -110,7 +110,7 @@ async def delete_position(id: Annotated[int, Depends(dep.check_position)],
 
 
 @router.post("/assign-user", dependencies=[Depends(get_current_admin)])
-async def assign_user(data: Assignment,
+async def assign_user(data: Annotated[Assignment, Depends(dep.check_assignment_data)],
                       uow: Annotated[UnitOfWork, Depends()]):
     try:
         user = await srv.assign_user_to_position(data, uow)
