@@ -2,12 +2,13 @@ from typing import Annotated
 
 from fastapi import APIRouter, Depends, HTTPException
 
-from schemas import Task, TaskUpdate
+from schemas import Task, TaskUpdate, UserInDB
 from utils.unit_of_work import UnitOfWork
 from api.v1.tasks import dependencies as dep
 from api.v1.tasks import exceptions as exp
 from api.v1.tasks import services as srv
 from api.v1.tasks.data_models import UserTaskID
+from api.v1.auth.dependencies import get_current_admin
 
 router = APIRouter()
 
@@ -15,10 +16,11 @@ router = APIRouter()
 @router.post("/create-task")
 async def create_task(
         data: Annotated[Task, Depends(dep.check_task_user_data)],
+        admin: Annotated[UserInDB, Depends(get_current_admin)],
         uow: Annotated[UnitOfWork, Depends()]
 ):
     try:
-        task = await srv.create_task(data, uow)
+        task = await srv.create_task(data, admin.id, uow)
         return task
     except exp.HandleTaskException:
         raise HTTPException(400, "Error in create task.")

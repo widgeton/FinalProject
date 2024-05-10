@@ -6,10 +6,12 @@ from api.v1.tasks import exceptions as exp
 from api.v1.tasks.data_models import UserTaskID
 
 
-async def create_task(data: Task, uow: AbstractUnitOfWork):
+async def create_task(data: Task, admin_id: int, uow: AbstractUnitOfWork):
     try:
         async with uow:
-            task = await uow.tasks.add(**data.model_dump(exclude={"status"}), status=Statuses.wait)
+            task = await uow.tasks.add(**data.model_dump(exclude={"status"}),
+                                       author_id=admin_id,
+                                       status=Statuses.wait)
             await uow.commit()
             return task.to_pydantic_schema()
     except Exception:

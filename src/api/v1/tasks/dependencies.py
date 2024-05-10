@@ -26,8 +26,6 @@ async def check_task_user_data(
         data: Task, admin: Annotated[UserInDB, Depends(get_current_admin)],
         uow: Annotated[UnitOfWork, Depends()]
 ):
-    if data.author_id is not None:
-        await check_user({"id": data.author_id}, admin, uow)
     if data.charged_id is not None:
         await check_user({"id": data.charged_id}, admin, uow)
     return data

@@ -7,7 +7,6 @@ from models.field_types import Statuses
 class Task(BaseModel):
     title: str = Field(examples=["Implement authentication"])
     description: str
-    author_id: int | None
     charged_id: int | None
     deadline: datetime = Field(examples=["2024-05-06 00:00"])
     status: Statuses
@@ -25,6 +24,7 @@ class Task(BaseModel):
 
 class TaskInDB(Task):
     id: int
+    author_id: int | None
 
 
 class TaskUpdate(Task):
