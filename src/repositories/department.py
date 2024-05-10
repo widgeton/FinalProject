@@ -1,6 +1,6 @@
 from typing import override
 
-from sqlalchemy import select, bindparam
+from sqlalchemy import select, bindparam, delete
 
 from utils.repository import SQLAlchemyDelRepository
 from models import DepartmentModel
@@ -27,3 +27,10 @@ class DepartmentRepository(SQLAlchemyDelRepository):
                 path[:old_path_len] = new_path
                 child.path = '.'.join(path)
         return dep
+
+    @override
+    async def delete(self, id_: int) -> None:
+        dep = await self.get({"id": id_})
+        stmt = delete(self.model).filter(self.model.path.like(bindparam('path') + '.%'))
+        await self.session.execute(stmt, {"path": dep.path})
+        await super().delete(id_)
